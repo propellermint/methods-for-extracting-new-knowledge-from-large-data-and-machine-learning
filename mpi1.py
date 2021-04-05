@@ -1,17 +1,17 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+import numpy as np
+import pandas as pd
+from mpi4py import MPI
+
 import numpy as np
 import pandas as pd
 from mpi4py import MPI
 
 
-size = 1000
+size = 100
 pd.DataFrame(np.random.random(size=size),columns=['x']).to_csv('x0.csv')
 pd.DataFrame(np.random.random(size=size),columns=['x']).to_csv('x1.csv')
-
-#Считывание таблиц
-data0 = pd.read_csv("x0.csv")
-data1 = pd.read_csv("x1.csv")
-
-
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -24,6 +24,6 @@ elif rank == 0:
     data = pd.read_csv('x0.csv')
     x_0 = data.x.sum()
     x_1 = comm.recv(source=1)
-    x1 = data0.x.sum()
-    x2 = data1.x.sum()
-    print("Сумма всех элементов X = ", x1 + x2)
+    print("Сумма всех элементов X = ", x_0 + x_1)
+
+
